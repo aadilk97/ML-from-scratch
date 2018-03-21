@@ -63,6 +63,8 @@ x3 = tf.reshape(x3, [-1, 36864])
 fully_connected1 = tf.matmul(x3, tf.transpose(W4))
 fully_connected1 = tf.add(fully_connected1, b4)
 fully_connected1 = tf.nn.relu(fully_connected1)
+fully_connected1 = tf.contrib.layers.layer_norm(fully_connected1)
+
 
 ##Drop out
 fully_connected1 = tf.nn.dropout(fully_connected1, 0.5)
@@ -87,7 +89,7 @@ with tf.Session() as sess:
 	# xt, _ = sess.run([cost, optimizer], feed_dict={X: X_train, y:Y_train})
 
 	batch_size = 100
-	for epoch in range(2):
+	for epoch in range(100):
 		curr_pointer = 0
 		epoch_cost = 0
 		while curr_pointer < (X_train.shape[0]):
@@ -98,11 +100,6 @@ with tf.Session() as sess:
 			_, c = sess.run([optimizer, cost], feed_dict={X: batch_x, y:batch_y})
 			epoch_cost += c
 
-			print (curr_pointer)
+			print ("Batch cost = ", c)
 
 		print ("Cost for epoch ", epoch, "= ", epoch_cost)
-
-	
-
-# x2 = tflearn.layers.conv.conv_2d(X_train, 10, 3, padding='valid')
-# print (x2.shape)
